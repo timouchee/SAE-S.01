@@ -1,4 +1,5 @@
 #include "lecteur.h"
+#include <iostream>
 
 Lecteur::Lecteur()
 {
@@ -7,11 +8,18 @@ Lecteur::Lecteur()
 
 void Lecteur::avancer()
 {
-
+    if (_posImageCourante +1 > nbImages() )
+    {_posImageCourante = _posImageCourante +1 - nbImages();}
+    else
+    {_posImageCourante ++;}
 }
 
 void Lecteur::reculer()
 {
+    if (_posImageCourante -1 < 1 )
+    {_posImageCourante =  nbImages();}
+    else
+    {_posImageCourante --;}
 }
 
 void Lecteur::changerDiaporama(unsigned int pNumDiaporama)
@@ -47,8 +55,20 @@ void Lecteur::chargerDiaporama()
 
      // trier le contenu du diaporama par ordre croissant selon le rang de l'image dans le diaporama
 	 // A FAIRE
-	 
+
+    for (unsigned int i = 0; i < nbImages() - 1; i++) {
+        for (unsigned int j = 0; j < nbImages() - i - 1; j++) {
+            // Comparaison des deux éléments adjacents
+            if (_diaporama[j]->getRang() > _diaporama[j+1]->getRang()) {
+                // Échange des deux éléments
+                Image* temp = _diaporama[j];
+                _diaporama[j] = _diaporama[j+1];
+                _diaporama[j+1] = temp;
+            }
+        }
+    }
      _posImageCourante = 0;
+
 
      cout << "Diaporama num. " << numDiaporamaCourant() << " selectionne. " << endl;
      cout << nbImages() << " images chargees dans le diaporama" << endl;
@@ -78,7 +98,32 @@ void Lecteur::afficher()
      * 1) vide (si num. de diaporama = 0) OU BIEN  numéro de diaporama affiché
      * 2) Si un diaporama courant est chargé (num. de diaporama > 0), affiche l'image courante OU BIEN 'diaporama vide'
      *     si ce diaporama n'a aucun image */
+    //nb d'image charger
+    //num di diaporama
+    //l'image courant
+    if (_numDiaporamaCourant == 0)
+    {
+        std::cout << "lecteur vide" <<endl;
+    }
+    else
+    {
+        std::cout << "Diaporama num."<< _numDiaporamaCourant<<" selectionne." <<endl;
+        if (_numDiaporamaCourant > 0)
+        {
+            std::cout <<"teste ";
+            std::cout <<"image courante : ";
+            _diaporama[_posImageCourante]->getTitre();
+
+        }
+        else
+        {
+            std::cout << "diaporama vide" <<endl;
+        }
+    }
+
+
 }
+
 
 unsigned int Lecteur::nbImages()
 {

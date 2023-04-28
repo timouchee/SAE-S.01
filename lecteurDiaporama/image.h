@@ -19,7 +19,7 @@ private:
                                    auquel l'image est associée */
     string _titre;              // intitulé de l'image
     string _categorie;          // catégorie de l'image (personne, animal, objet)
-    string _chemin;             // chemin complet vers le dossier où se trouve l'image
+    string _chemin;             // chemin complet vers le dossier où se trouve l'image/ pas a afficher
 };
 
 #endif // IMAGE_H
