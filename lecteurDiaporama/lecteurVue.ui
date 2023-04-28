@@ -107,7 +107,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>13</width>
+          <width>10</width>
           <height>40</height>
          </size>
         </property>
@@ -192,6 +192,16 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu1">
+    <property name="title">
+     <string>Paramètre</string>
+    </property>
+    <addaction name="actionzthje"/>
+    <addaction name="actionsryj"/>
+    <addaction name="actionaide"/>
+    <addaction name="actionquitter"/>
+   </widget>
+   <addaction name="menu1"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -205,6 +215,26 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionzthje">
+   <property name="text">
+    <string>Vitesse de défilement</string>
+   </property>
+  </action>
+  <action name="actionsryj">
+   <property name="text">
+    <string>charger diaporama</string>
+   </property>
+  </action>
+  <action name="actionaide">
+   <property name="text">
+    <string>aide</string>
+   </property>
+  </action>
+  <action name="actionquitter">
+   <property name="text">
+    <string>quitter</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
