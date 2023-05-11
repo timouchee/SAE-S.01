@@ -2,6 +2,8 @@
 #include "ui_lecteurvue.h"
 #include <iostream>
 #include <QPixmap>
+#include <ctime>
+#include <unistd.h>
 
 
 lecteurVue::lecteurVue(QWidget *parent)
@@ -10,9 +12,21 @@ lecteurVue::lecteurVue(QWidget *parent)
 {
     ui->setupUi(this);
     _numDiaporamaCourant = 0;   // =  le lecteur est vide
+    connect(ui->bPrecedent,SIGNAL(clicked()),this,SLOT(reculer()));
+    connect(ui->bSuivant,SIGNAL(clicked()),this,SLOT(avancer()));
+    connect(ui->bArreterDiaporama,SIGNAL(clicked()),this,SLOT(arreterDiaporama()));
+    connect(ui->bLancerDiaporama,SIGNAL(clicked()),this,SLOT(test()));
+
+    connect(ui->actionQuitter_2, &QAction::triggered, this, &lecteurVue::fermertous);
+
+    connect(ui->actionA_propos_de, &QAction::triggered, this, &lecteurVue::aide);
+
+
+    // Dans le constructeur de votre classe
 
 
 
+    etat = automatique;
 }
 
 
@@ -30,6 +44,12 @@ void lecteurVue::avancer()
     {_posImageCourante = _posImageCourante +1 - nbImages();}
     else
     {_posImageCourante ++;}
+    afficher();
+    if (etat==automatique)
+    {
+        sleep(2);
+        avancer();
+    }
 }
 
 void lecteurVue::reculer()
@@ -38,6 +58,7 @@ void lecteurVue::reculer()
     {_posImageCourante =  nbImages()-1;}
     else
     {_posImageCourante--;}
+    afficher();
 }
 
 void lecteurVue::changerDiaporama(unsigned int pNumDiaporama)
@@ -60,6 +81,7 @@ void lecteurVue::chargerDiaporama()
     /* Chargement des images associées au diaporama courant
        Dans une version ultérieure, ces données proviendront d'une base de données,
        et correspondront au diaporama choisi */
+    /*
     Image* imageACharger;
     imageACharger = new Image(3, "personne", "Blanche Neige", "C:\\cartesDisney\\carteDisney2.gif");
     _diaporama.push_back(imageACharger);
@@ -69,7 +91,18 @@ void lecteurVue::chargerDiaporama()
     _diaporama.push_back(imageACharger);
     imageACharger = new Image(1, "personne", "Grincheux", "C:\\cartesDisney\\carteDisney1.gif");
     _diaporama.push_back(imageACharger);
+    F:\ecole\SAE\SAE S2.01\projet-avec-git-S2.01\cartesDisney\cartesDisney
+    */
 
+    Image* imageACharger;
+    imageACharger = new Image(3, "personne", "Blanche Neige", "F:\\ecole\\SAE\\SAE S2.01\\projet-avec-git-S2.01\\carteDisney2.gif");
+    _diaporama.push_back(imageACharger);
+    imageACharger = new Image(2, "personne", "Cendrillon", "F:\\ecole\\SAE\\SAE S2.01\\projet-avec-git-S2.01\\cartesDisney\\carteDisney4.gif");
+    _diaporama.push_back(imageACharger);
+    imageACharger = new Image(4, "animal", "Mickey", "F:\\ecole\\SAE\\SAE S2.01\\projet-avec-git-S2.01\\cartesDisney\\carteDisney1.gif");
+    _diaporama.push_back(imageACharger);
+    imageACharger = new Image(1, "personne", "Grincheux", "F:\\ecole\\SAE\\SAE S2.01\\projet-avec-git-S2.01\\cartesDisney\\carteDisney1.gif");
+    _diaporama.push_back(imageACharger);
 
      // trier le contenu du diaporama par ordre croissant selon le rang de l'image dans le diaporama
      // A FAIRE
@@ -91,14 +124,17 @@ void lecteurVue::chargerDiaporama()
     cout << "Diaporama num. " << numDiaporamaCourant() << " selectionne. " << endl;
     cout << nbImages() << " images chargees dans le diaporama" << endl;
 
-    if (nbImages()==0)
-    {
-        //QPixmap *pixmap_img = new QPixmap("dossier1/dossier2/img.jpg");
-        QPixmap *pixmap_img1 = new QPixmap( );
-        pixmap_img1->load(QString::fromStdString(_diaporama[_posImageCourante]->getChemin()));
 
-        ui->lImage->setPixmap(*pixmap_img1);
-    }
+    //QPixmap *pixmap_img = new QPixmap("dossier1/dossier2/img.jpg");
+    QPixmap *pixmap_img1 = new QPixmap( );
+    pixmap_img1->load(QString::fromStdString(_diaporama[_posImageCourante]->getChemin()));
+    cout << "passer la" <<endl;
+    ui->lImage->setPixmap(QPixmap(QString::fromStdString(_diaporama[_posImageCourante]->getChemin())));
+    //ui->lImage->setPixmap(*pixmap_img1);
+
+    afficher();
+    sleep(2);
+    avancer();
 
 
 }
@@ -139,6 +175,37 @@ void lecteurVue::afficher()
         {
             cout << "Diaporama num."<< _numDiaporamaCourant<<endl;
             _diaporama[_posImageCourante]->afficher() ;
+            //=================================
+            qDebug() << "oon passe la";
+            //QPixmap *pixmap_img = new QPixmap("dossier1/dossier2/img.jpg");
+
+            //QString chemin = QString::fromStdString(_diaporama[_posImageCourante]->getChemin() );
+
+            //ui->lImage->setPixmap(QPixmap(chemin));
+
+            QString chemin = QString::fromStdString(imageCourante()->getChemin());
+            QPixmap pixmap(chemin);
+            ui->lImage->setPixmap(pixmap);
+
+            cout <<_diaporama[_posImageCourante]->getChemin()<<endl;
+
+            //QPixmap *pixmap_img1 = new QPixmap( );
+
+
+
+            //pixmap_img1->load(chemin);
+                /*
+            if (!pixmap_img1->isNull()) {
+                // L'image a été chargée avec succès
+                ui->lImage->setPixmap(*pixmap_img1);
+            } else {
+                // Échec du chargement de l'image
+                qDebug() << "Erreur lors du chargement de l'image";
+            }
+                   */
+            //ui->lImage->setPixmap(*pixmap_img1);
+            //===================================================
+
 
         }
         else
@@ -173,4 +240,45 @@ unsigned int lecteurVue::numDiaporamaCourant()
 {
     return _numDiaporamaCourant;
 }
+
+void lecteurVue::test()
+{
+
+    changerDiaporama(1);
+    /*
+    std::cout << "avant affichage" <<std::endl;
+    sleep(5);
+    std::cout << "apres affichage" <<std::endl;
+
+    std::cout << "haya" <<std::endl;
+    */
+}
+
+void lecteurVue::arreterDiaporama()
+{
+    etat=manuel;
+}
+
+void lecteurVue::fermertous()
+{
+    this->close();
+}
+
+void lecteurVue::aide()
+{
+    info *fen_aide= new info();
+    fen_aide->exec();
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

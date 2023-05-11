@@ -2,7 +2,7 @@
 #define LECTEURVUE_H
 #include "image.h"
 #include <QMainWindow>
-
+#include "info.h"
 #include <vector>
 
 typedef vector<Image*> Diaporama;   // Structure de données contenant les infos sur les images
@@ -18,14 +18,23 @@ class lecteurVue : public QMainWindow
 public:
     lecteurVue(QWidget *parent = nullptr);
     ~lecteurVue();
+    enum Mode {automatique,manuel};
+    Mode etat;
 
-    void avancer();             // incrémente _posImageCourante, modulo nbImages()
-    void reculer();             // décrémente _posImageCourante, modulo nbImages()
+
     void changerDiaporama(unsigned int pNumDiaporama);    // permet de choisir un diaporama, 0 si aucun diaporama souhaité
     void afficher();            // affiche les informations sur lecteur-diaporama et image courante
     unsigned int nbImages();    // affiche la taille de _diaporama
     Image* imageCourante();     // retourne le pointeur vers l'image courante
     unsigned int numDiaporamaCourant();
+
+public slots:
+    void test();
+    void avancer();             // incrémente _posImageCourante, modulo nbImages()
+    void reculer();             // décrémente _posImageCourante, modulo nbImages()
+    void arreterDiaporama();
+    void fermertous();
+    void aide();
 
 
 private:

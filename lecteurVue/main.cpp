@@ -12,10 +12,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     lecteurVue monLecteur;
     monLecteur.afficher();
-
     // On change de diaporama courant, ce qui a pour effet de le charge.
     // Le lecteur charge 4 images. L'image courante est la première, par défaut.
-    monLecteur.changerDiaporama(1);
+
+
+    /*
     monLecteur.afficher();
 
     cout << endl << "Test avancer() : 4 fois " << endl;
@@ -41,9 +42,11 @@ int main(int argc, char *argv[])
         monLecteur.changerDiaporama(0);
         monLecteur.afficher();
 
-
+    */
     //lecteurVue w;
+
     monLecteur.show();
+    //monLecteur.changerDiaporama(1);
     return a.exec();
 }
 

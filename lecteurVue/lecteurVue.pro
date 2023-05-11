@@ -10,14 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     image.cpp \
+    info.cpp \
     main.cpp \
     lecteurvue.cpp
 
 HEADERS += \
     image.h \
+    info.h \
     lecteurvue.h
 
 FORMS += \
+    info.ui \
     lecteurvue.ui
 
 # Default rules for deployment.
