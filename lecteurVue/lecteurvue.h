@@ -20,7 +20,8 @@ public:
     ~lecteurVue();
     enum Mode {automatique,manuel};
     Mode etat;
-
+    void avancer(int);             // incrémente _posImageCourante, modulo nbImages()
+    void reculer(int);             // décrémente _posImageCourante, modulo nbImages()
 
     void changerDiaporama(unsigned int pNumDiaporama);    // permet de choisir un diaporama, 0 si aucun diaporama souhaité
     void afficher();            // affiche les informations sur lecteur-diaporama et image courante
@@ -30,8 +31,8 @@ public:
 
 public slots:
     void test();
-    void avancer();             // incrémente _posImageCourante, modulo nbImages()
-    void reculer();             // décrémente _posImageCourante, modulo nbImages()
+    void av();//avancer
+    void rec();//reculer
     void arreterDiaporama();
     void fermertous();
     void aide();
