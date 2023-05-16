@@ -21,8 +21,23 @@ lecteurVue::lecteurVue(QWidget *parent)
 
     connect(ui->actionA_propos_de, &QAction::triggered, this, &lecteurVue::aide);
 
-    //etat = automatique;
-    etat = manuel;
+    QObject::connect(&timer, &QTimer::timeout, [&]()
+    {
+        if (etat==automatique)
+        {
+            compteur++;
+            if (compteur >= 2 )
+            {
+                compteur=0;
+                avancer(0);
+            }
+            timer.start(1000);
+        }
+
+     });
+
+    etat = automatique;
+    //etat = manuel;
 }
 
 
@@ -45,11 +60,7 @@ void lecteurVue::avancer(int prov)
     else
     {_posImageCourante ++;}
     afficher();
-    if (etat==automatique)
-    {
-        sleep(2);
-        avancer(0);
-    }
+
 }
 
 void lecteurVue::reculer(int prov)
@@ -117,7 +128,6 @@ void lecteurVue::chargerDiaporama()
 
 
     afficher();
-    sleep(2);
     avancer(0);
 
 
@@ -226,13 +236,7 @@ void lecteurVue::test()
 {
 
     changerDiaporama(1);
-    /*
-    std::cout << "avant affichage" <<std::endl;
-    sleep(5);
-    std::cout << "apres affichage" <<std::endl;
-
-    std::cout << "haya" <<std::endl;
-    */
+    timer.start(1000);
 }
 
 void lecteurVue::av()
@@ -261,7 +265,20 @@ void lecteurVue::aide()
     fen_aide->exec();
 }
 
-
+void lecteurVue::truc()
+{
+    timer.start(1000);
+    if (etat==automatique)
+    {
+        compteur++;
+        if (compteur >= 2 )
+        {
+            compteur=0;
+            avancer(0);
+        }
+        truc();
+    }
+}
 
 
 

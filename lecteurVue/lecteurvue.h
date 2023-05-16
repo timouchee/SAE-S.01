@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "info.h"
 #include <vector>
+#include <QTimer>
 
 typedef vector<Image*> Diaporama;   // Structure de données contenant les infos sur les images
 
@@ -20,6 +21,7 @@ public:
     ~lecteurVue();
     enum Mode {automatique,manuel};
     Mode etat;
+    int compteur=0;
     void avancer(int);             // incrémente _posImageCourante, modulo nbImages()
     void reculer(int);             // décrémente _posImageCourante, modulo nbImages()
 
@@ -28,6 +30,8 @@ public:
     unsigned int nbImages();    // affiche la taille de _diaporama
     Image* imageCourante();     // retourne le pointeur vers l'image courante
     unsigned int numDiaporamaCourant();
+    QTimer timer;
+    void truc();
 
 public slots:
     void test();
