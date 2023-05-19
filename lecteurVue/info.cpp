@@ -6,8 +6,8 @@ info::info(QWidget *parent) :
     ui(new Ui::info)
 {
     ui->setupUi(this);
-    ui->lVertion->setText("vertion : 2.0");
-    ui->lDateCration->setText("date de création : 11/05/2023");
+    ui->lVertion->setText("vertion : 4.0");
+    ui->lDateCration->setText("date de création : 18/05/2023");
     ui->lAuteur->setText("auteur : Juliard Timéo / Da Silva Hugo");
 }
 

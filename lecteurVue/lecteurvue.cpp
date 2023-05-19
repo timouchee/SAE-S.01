@@ -15,24 +15,30 @@ lecteurVue::lecteurVue(QWidget *parent)
     connect(ui->bPrecedent,SIGNAL(clicked()),this,SLOT(rec()));
     connect(ui->bSuivant,SIGNAL(clicked()),this,SLOT(av()));
     connect(ui->bArreterDiaporama,SIGNAL(clicked()),this,SLOT(arreterDiaporama()));
-    connect(ui->bLancerDiaporama,SIGNAL(clicked()),this,SLOT(test()));
+    connect(ui->bLancerDiaporama,SIGNAL(clicked()),this,SLOT(lancerDiaporama()));
 
     connect(ui->actionQuitter_2, &QAction::triggered, this, &lecteurVue::fermertous);
-
     connect(ui->actionA_propos_de, &QAction::triggered, this, &lecteurVue::aide);
+    connect(ui->actioncharger_diaporama_2, &QAction::triggered, this, &lecteurVue::chargerdiapo1);
+    connect(ui->actionenlever_diaporama_2, &QAction::triggered, this, &lecteurVue::enleverdiapo1);
+    connect(ui->actionvitesse_de_d_filement, &QAction::triggered, this, &lecteurVue::defile);
 
     QObject::connect(&timer, &QTimer::timeout, [&]()
     {
-        if (etat==automatique)
+        if (_numDiaporamaCourant!=0)
         {
-            compteur++;
-            if (compteur >= 2 )
+            if (etat==automatique)
             {
-                compteur=0;
-                avancer(0);
+                compteur++;
+                if (compteur >= vitesse_defilement )
+                {
+                    compteur=0;
+                    avancer(0);
+                }
+                timer.start(1000);
             }
-            timer.start(1000);
         }
+
 
      });
 
@@ -47,6 +53,12 @@ lecteurVue::~lecteurVue()
     delete ui;
 }
 
+void lecteurVue::lancer()
+{
+    etat=automatique;
+    timer.start(1000);
+}
+
 
 
 void lecteurVue::avancer(int prov)
@@ -56,7 +68,11 @@ void lecteurVue::avancer(int prov)
     {etat=manuel;}
 
     if (_posImageCourante +1 > nbImages()-1 )
-    {_posImageCourante = _posImageCourante +1 - nbImages();}
+    {
+        _posImageCourante = _posImageCourante +1 - nbImages();
+
+
+    }
     else
     {_posImageCourante ++;}
     afficher();
@@ -86,6 +102,7 @@ void lecteurVue::changerDiaporama(unsigned int pNumDiaporama)
     if (numDiaporamaCourant() > 0)
     {
         chargerDiaporama(); // charge le diaporama courant
+
     }
 
 }
@@ -129,6 +146,8 @@ void lecteurVue::chargerDiaporama()
 
     afficher();
     avancer(0);
+
+
 
 
 }
@@ -183,7 +202,16 @@ void lecteurVue::afficher()
             ui->lTitre->setText(QString::fromStdString(_diaporama[_posImageCourante]->getTitre() ));
             ui->lRang->setText(QString::number(_diaporama[_posImageCourante]->getRang()));
 
-            std::string texte = "mode : " + std::to_string(static_cast<int>(etat));
+            string lemode;
+            if (etat==manuel)
+            {
+                lemode="manuel";
+            }
+            else
+            {
+                lemode="automatique";
+            }
+            std::string texte = "mode : " + lemode;
             ui->bMode->setText(QString::fromStdString(texte));
 
 
@@ -232,11 +260,12 @@ unsigned int lecteurVue::numDiaporamaCourant()
     return _numDiaporamaCourant;
 }
 
-void lecteurVue::test()
+void lecteurVue::lancerDiaporama()
 {
 
     changerDiaporama(1);
-    timer.start(1000);
+    lancer();
+
 }
 
 void lecteurVue::av()
@@ -265,22 +294,24 @@ void lecteurVue::aide()
     fen_aide->exec();
 }
 
-void lecteurVue::truc()
+void lecteurVue::chargerdiapo1()
 {
-    timer.start(1000);
-    if (etat==automatique)
-    {
-        compteur++;
-        if (compteur >= 2 )
-        {
-            compteur=0;
-            avancer(0);
-        }
-        truc();
-    }
+    changerDiaporama(1);
 }
 
+void lecteurVue::enleverdiapo1()
+{
+    viderDiaporama();
+    _numDiaporamaCourant =0;
+}
 
+void lecteurVue::defile()
+{
+    vit *fen_defile= new vit();
+    fen_defile->setSpine(vitesse_defilement);
+    fen_defile->exec();
+    vitesse_defilement=fen_defile->valueSpine();
+}
 
 
 

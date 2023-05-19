@@ -12,16 +12,19 @@ SOURCES += \
     image.cpp \
     info.cpp \
     main.cpp \
-    lecteurvue.cpp
+    lecteurvue.cpp \
+    vit.cpp
 
 HEADERS += \
     image.h \
     info.h \
-    lecteurvue.h
+    lecteurvue.h \
+    vit.h
 
 FORMS += \
     info.ui \
-    lecteurvue.ui
+    lecteurvue.ui \
+    vit.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
