@@ -1,6 +1,8 @@
 cartesDisney/
 uneAncienneVertion
 v0_version_console_pourEtudiants
+build-lecteurVue-Desktop_Qt_6_3_1_MinGW_64_bit-Debug
 interface.png
 sae2.01-Description.pdf
 lecteurVue/lecteurVue.pro.user
+diaporama_dossierAnalyseConceptionACompléter.docx

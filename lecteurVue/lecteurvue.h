@@ -19,8 +19,9 @@ class lecteurVue : public QMainWindow
 
 public:    
     enum Mode {automatique,manuel};
-    enum categorieImage {animal,personne,tous};
-    categorieImage imageCategorieCourant;
+    string lst_categorie[4] = {"tous","objet","animal","personne"};
+    int cat_actuelle=0;
+    string CategorieImageCourant="tous";
     Mode etat;
     int compteur=0;
     QTimer timer;
@@ -47,6 +48,7 @@ public slots:
     void chargerdiapo1();
     void enleverdiapo1();
     void defile();
+    void changerMode();
 
 
 private:

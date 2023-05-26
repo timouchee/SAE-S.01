@@ -16,6 +16,7 @@ lecteurVue::lecteurVue(QWidget *parent)
     connect(ui->bSuivant,SIGNAL(clicked()),this,SLOT(av()));
     connect(ui->bArreterDiaporama,SIGNAL(clicked()),this,SLOT(arreterDiaporama()));
     connect(ui->bLancerDiaporama,SIGNAL(clicked()),this,SLOT(lancerDiaporama()));
+    connect(ui->bCatgorie,SIGNAL(clicked()),this,SLOT(changerMode()));
 
     connect(ui->actionQuitter_2, &QAction::triggered, this, &lecteurVue::fermertous);
     connect(ui->actionA_propos_de, &QAction::triggered, this, &lecteurVue::aide);
@@ -70,11 +71,14 @@ void lecteurVue::avancer(int prov)
     if (_posImageCourante +1 > nbImages()-1 )
     {
         _posImageCourante = _posImageCourante +1 - nbImages();
-
-
     }
     else
     {_posImageCourante ++;}
+    cout << _diaporama[_posImageCourante]->getCategorie() << "....." << CategorieImageCourant << endl;
+    if (_diaporama[_posImageCourante]->getCategorie() != CategorieImageCourant and CategorieImageCourant != "tous")
+    {
+        avancer(0);
+    }
     afficher();
 
 }
@@ -88,6 +92,10 @@ void lecteurVue::reculer(int prov)
     {_posImageCourante =  nbImages()-1;}
     else
     {_posImageCourante--;}
+    if (_diaporama[_posImageCourante]->getCategorie() != CategorieImageCourant and CategorieImageCourant != "tous")
+    {
+        reculer(0);
+    }
     afficher();
 }
 
@@ -311,6 +319,20 @@ void lecteurVue::defile()
     fen_defile->setSpine(vitesse_defilement);
     fen_defile->exec();
     vitesse_defilement=fen_defile->valueSpine();
+}
+
+void lecteurVue::changerMode()
+{
+    if (cat_actuelle +1 > 3 )
+    {
+        cat_actuelle = 0;
+    }
+    else
+    {cat_actuelle ++;}
+    string lemode=lst_categorie[cat_actuelle];
+    CategorieImageCourant=lemode;
+    std::string texte = "type catégorie : " + lemode;
+    ui->bCatgorie->setText(QString::fromStdString(texte));
 }
 
 
