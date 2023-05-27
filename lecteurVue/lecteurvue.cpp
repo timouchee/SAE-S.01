@@ -4,6 +4,8 @@
 #include <QPixmap>
 #include <ctime>
 #include <unistd.h>
+#include <QSqlQuery>
+#include <QSqlQueryModel>
 
 
 lecteurVue::lecteurVue(QWidget *parent)
@@ -39,12 +41,18 @@ lecteurVue::lecteurVue(QWidget *parent)
                 timer.start(1000);
             }
         }
-
-
      });
 
     etat = automatique;
-    //etat = manuel;
+    db = new database();
+    bool ouvertureOK = db->openDatabase();
+    db->closeDatabase();
+    cout << "la connexion est faite ? : " << ouvertureOK  << endl;
+
+
+
+
+
 }
 
 
@@ -66,19 +74,16 @@ void lecteurVue::avancer(int prov)
 {
     qDebug() << "avancer";
     if (prov==1)
-    {etat=manuel;}
+        {etat=manuel;}
 
     if (_posImageCourante +1 > nbImages()-1 )
-    {
-        _posImageCourante = _posImageCourante +1 - nbImages();
-    }
+        {_posImageCourante = _posImageCourante +1 - nbImages();}
     else
-    {_posImageCourante ++;}
+        {_posImageCourante ++;}
+
     cout << _diaporama[_posImageCourante]->getCategorie() << "....." << CategorieImageCourant << endl;
     if (_diaporama[_posImageCourante]->getCategorie() != CategorieImageCourant and CategorieImageCourant != "tous")
-    {
-        avancer(0);
-    }
+        {avancer(0);}
     afficher();
 
 }
@@ -121,6 +126,48 @@ void lecteurVue::chargerDiaporama()
        Dans une version ultérieure, ces données proviendront d'une base de données,
        et correspondront au diaporama choisi */
 
+    //QSqlQuery maRequete("select Article.reference,Article.descriptif,Article.prixHT,Categorie.libelle FROM Article join Categorie on Article.CodeCategorie=Categorie.CodeCategorie");
+    //maRequete.value(0).toString()
+    //for (int i=0;maRequete.next(); i++)
+
+    /*
+     *quelle diaporama ? (nom ou ID) (Diaporamas) #FAIT
+     *recup la vitesse depuis quelle diapo (Diaporamas) #FAIT
+     *recup l'id des diapo qui a partienent a diaporama choisit (diaposDansDiaporama)
+     *recup au passage leurs rangs(diaposDansDiaporama)
+     * ensuite on recuppour les ID diapo choisit leurs ID titre famille et URL (Diapo)
+     * puis on recup pour chaque diapo la famille a partir de leur ID famille (Familles)
+     * importe le tous
+     *
+     */
+    QString larequete = "select vitesseDefilement from Diaporamas where idDiaporama =" + QString::number(_numDiaporamaCourant);
+    QSqlQuery maRequete1(larequete);
+    maRequete1.next();
+    vitesse_defilement = maRequete1.value(0).toInt();
+
+    larequete = "select idDiapo,rang from DiaposDansDiaporama where idDiaporama =" + QString::number(_numDiaporamaCourant);
+    QSqlQuery maRequete2(larequete);
+    Image* imageACharger;
+
+    for (int i=0;maRequete2.next(); i++)
+    {
+        imageACharger = new Image();
+        imageACharger->setRang(maRequete2.value(1).toUInt());
+        larequete = "select titrePhoto,idFam,uriPhoto from Diapos where idphoto =" + maRequete2.value(0).toString();
+        QSqlQuery maRequete3(larequete);
+        maRequete3.next();
+        imageACharger->setTitre((maRequete3.value(0).toString()).toStdString());
+        imageACharger->setChemin(chemin+(maRequete3.value(2).toString()).toStdString());
+        larequete = "select nomFamille from Familles where idFamille =" + maRequete3.value(1).toString();
+        QSqlQuery maRequete4(larequete);
+        maRequete4.next();
+        imageACharger->setCategorie((maRequete4.value(0).toString()).toStdString());
+        _diaporama.push_back(imageACharger);
+    }
+    delete imageACharger;
+
+    /*
+
     Image* imageACharger;
     imageACharger = new Image(3, "animal", "Dalmatien", "F:\\ecole\\SAE\\SAE S2.01\\projet-avec-git-S2.01\\cartesDisney\\cartesDisney\\Disney_1.gif");
     _diaporama.push_back(imageACharger);
@@ -130,9 +177,9 @@ void lecteurVue::chargerDiaporama()
     _diaporama.push_back(imageACharger);
     imageACharger = new Image(1, "personne", "Cendrillon", "F:\\ecole\\SAE\\SAE S2.01\\projet-avec-git-S2.01\\cartesDisney\\cartesDisney\\Disney_4.gif");
     _diaporama.push_back(imageACharger);
+    */
 
      // trier le contenu du diaporama par ordre croissant selon le rang de l'image dans le diaporama
-     // A FAIRE
     for (unsigned int i = 0; i < nbImages() - 1; i++)
     {
         for (unsigned int j = 0; j < nbImages() - i - 1; j++)
@@ -196,14 +243,7 @@ void lecteurVue::afficher()
         {
             cout << "Diaporama num."<< _numDiaporamaCourant<<endl;
             _diaporama[_posImageCourante]->afficher() ;
-            //=================================
-            qDebug() << "avant afficher image";
-
-            //QString chemin = QString::fromStdString(_diaporama[_posImageCourante]->getChemin() );
-
-            //cout <<_diaporama[_posImageCourante]->getChemin()<<endl;
-
-            //ui->lImage->setPixmap(QPixmap(chemin));
+            //=================================            
 
             ui->lImage->setPixmap(QPixmap(QString::fromStdString(_diaporama[_posImageCourante]->getChemin() )));
 
@@ -221,18 +261,6 @@ void lecteurVue::afficher()
             }
             std::string texte = "mode : " + lemode;
             ui->bMode->setText(QString::fromStdString(texte));
-
-
-
-
-            qDebug() << "apres afficher image";
-
-
-            //ui->lImage->show();
-
-            //QPixmap *pixmap_img = new QPixmap("dossier1/dossier2/img.jpg");
-
-
 
         }
         else
@@ -270,9 +298,9 @@ unsigned int lecteurVue::numDiaporamaCourant()
 
 void lecteurVue::lancerDiaporama()
 {
+    if (_numDiaporamaCourant != 0)
+    {lancer();}
 
-    changerDiaporama(1);
-    lancer();
 
 }
 
@@ -304,7 +332,9 @@ void lecteurVue::aide()
 
 void lecteurVue::chargerdiapo1()
 {
-    changerDiaporama(1);
+    demandeDiaporama *fen_demandeDiapo= new demandeDiaporama();
+    fen_demandeDiapo->exec();
+    changerDiaporama(fen_demandeDiapo->recupTexte().toInt());
 }
 
 void lecteurVue::enleverdiapo1()

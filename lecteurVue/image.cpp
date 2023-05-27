@@ -28,6 +28,26 @@ string Image::getChemin()
     return _chemin;
 }
 
+void Image::setRang(unsigned int pRang)
+{
+    _rang = pRang;
+}
+
+void Image::setCategorie(string pCategorie)
+{
+    _categorie = pCategorie;
+}
+
+void Image::setTitre(string pTitre)
+{
+    _titre = pTitre;
+}
+
+void Image::setChemin(string pChemin)
+{
+    _chemin = pChemin;
+}
+
 void Image::afficher()
 {
     cout << "image( rang:" << getRang() << ", titre:" << getTitre() << ", categorie:"

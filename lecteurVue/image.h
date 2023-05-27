@@ -13,6 +13,10 @@ public:
     string getCategorie();
     string getTitre();
     string getChemin();
+    void setRang(unsigned int);
+    void setCategorie(string);
+    void setTitre(string);
+    void setChemin(string);
     void afficher();           // affiche tous les champs de l'image
 
 private:

@@ -6,6 +6,8 @@
 #include "vit.h"
 #include <vector>
 #include <QTimer>
+#include "database.h"
+#include "demandediaporama.h"
 
 typedef vector<Image*> Diaporama;   // Structure de données contenant les infos sur les images
 
@@ -19,13 +21,15 @@ class lecteurVue : public QMainWindow
 
 public:    
     enum Mode {automatique,manuel};
-    string lst_categorie[4] = {"tous","objet","animal","personne"};
+    string lst_categorie[4] = {"tous","Objet","Animal","Personnage"};
     int cat_actuelle=0;
     string CategorieImageCourant="tous";
     Mode etat;
     int compteur=0;
     QTimer timer;
     int vitesse_defilement=2;
+    database *db;
+    string chemin = "F:\\ecole\\SAE\\SAE S2.01\\projet-avec-git-S2.01\\cartesDisney";
 
     void avancer(int);             // incrémente _posImageCourante, modulo nbImages()
     void reculer(int);             // décrémente _posImageCourante, modulo nbImages()
@@ -38,14 +42,15 @@ public:
     ~lecteurVue();
     void lancer();
 
+
 public slots:
     void lancerDiaporama();
     void av();//avancer
     void rec();//reculer
-    void arreterDiaporama();
-    void fermertous();
-    void aide();
-    void chargerdiapo1();
+    void arreterDiaporama();//arrete le diaporama
+    void fermertous();//ferme tous
+    void aide();//affiche la fenetre
+    void chargerdiapo1();//chager le diaporama 1
     void enleverdiapo1();
     void defile();
     void changerMode();
