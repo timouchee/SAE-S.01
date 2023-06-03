@@ -15,6 +15,7 @@ SOURCES += \
     info.cpp \
     main.cpp \
     lecteurvue.cpp \
+    modif_diaporama.cpp \
     vit.cpp
 
 HEADERS += \
@@ -23,12 +24,14 @@ HEADERS += \
     image.h \
     info.h \
     lecteurvue.h \
+    modif_diaporama.h \
     vit.h
 
 FORMS += \
     demandediaporama.ui \
     info.ui \
     lecteurvue.ui \
+    modif_diaporama.ui \
     vit.ui
 
 # Default rules for deployment.
