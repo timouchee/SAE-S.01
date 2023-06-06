@@ -195,7 +195,7 @@
      <x>0</x>
      <y>0</y>
      <width>439</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuparam_tre">
@@ -205,6 +205,7 @@
     <addaction name="actionvitesse_de_d_filement"/>
     <addaction name="actionenlever_diaporama_2"/>
     <addaction name="actioncharger_diaporama_2"/>
+    <addaction name="actionmodifier_diapositive"/>
    </widget>
    <widget class="QMenu" name="menufichier">
     <property name="title">
@@ -266,6 +267,11 @@
   <action name="actionA_propos_de">
    <property name="text">
     <string>A propos de......</string>
+   </property>
+  </action>
+  <action name="actionmodifier_diapositive">
+   <property name="text">
+    <string>modifier diapositive</string>
    </property>
   </action>
  </widget>

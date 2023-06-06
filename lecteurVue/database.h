@@ -3,7 +3,7 @@
 
 #include <QSqlDatabase>
 
-#define DATABASE_NAME "nodenot_bd9"
+#define DATABASE_NAME "tjuliard"//nodenot_bd9
 #define CONNECT_TYPE "QODBC"
 
 class database

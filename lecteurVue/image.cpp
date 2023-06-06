@@ -28,6 +28,16 @@ string Image::getChemin()
     return _chemin;
 }
 
+string Image::getId()
+{
+    return Id;
+}
+
+void Image::setId(string newId)
+{
+    Id=newId;
+}
+
 void Image::setRang(unsigned int pRang)
 {
     _rang = pRang;

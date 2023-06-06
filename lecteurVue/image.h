@@ -13,6 +13,10 @@ public:
     string getCategorie();
     string getTitre();
     string getChemin();
+
+    string getId ();
+    void setId(string);
+
     void setRang(unsigned int);
     void setCategorie(string);
     void setTitre(string);
@@ -25,6 +29,7 @@ private:
     string _titre;              // intitulé de l'image
     string _categorie;          // catégorie de l'image (personne, animal, objet)
     string _chemin;             // chemin complet vers le dossier où se trouve l'image/ pas a afficher
+    string Id;
 };
 
 #endif // IMAGE_H

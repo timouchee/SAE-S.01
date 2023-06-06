@@ -25,6 +25,7 @@ lecteurVue::lecteurVue(QWidget *parent)
     connect(ui->actioncharger_diaporama_2, &QAction::triggered, this, &lecteurVue::chargerdiapo1);
     connect(ui->actionenlever_diaporama_2, &QAction::triggered, this, &lecteurVue::enleverdiapo1);
     connect(ui->actionvitesse_de_d_filement, &QAction::triggered, this, &lecteurVue::defile);
+    connect(ui->actionmodifier_diapositive, &QAction::triggered, this, &lecteurVue::modifier_Diapositive);
 
     QObject::connect(&timer, &QTimer::timeout, [&]()
     {
@@ -153,11 +154,12 @@ void lecteurVue::chargerDiaporama()
     {
         imageACharger = new Image();
         imageACharger->setRang(maRequete2.value(1).toUInt());
-        larequete = "select titrePhoto,idFam,uriPhoto from Diapos where idphoto =" + maRequete2.value(0).toString();
+        larequete = "select titrePhoto,idFam,uriPhoto,idphoto from Diapos where idphoto =" + maRequete2.value(0).toString();
         QSqlQuery maRequete3(larequete);
         maRequete3.next();
+        imageACharger->setId( (maRequete3.value(3).toString()).toStdString() );
         imageACharger->setTitre((maRequete3.value(0).toString()).toStdString());
-        imageACharger->setChemin(chemin+(maRequete3.value(2).toString()).toStdString());
+        imageACharger->setChemin((maRequete3.value(2).toString()).toStdString());
         larequete = "select nomFamille from Familles where idFamille =" + maRequete3.value(1).toString();
         QSqlQuery maRequete4(larequete);
         maRequete4.next();
@@ -245,7 +247,7 @@ void lecteurVue::afficher()
             _diaporama[_posImageCourante]->afficher() ;
             //=================================            
 
-            ui->lImage->setPixmap(QPixmap(QString::fromStdString(_diaporama[_posImageCourante]->getChemin() )));
+            ui->lImage->setPixmap(QPixmap(QString::fromStdString(chemin+_diaporama[_posImageCourante]->getChemin() )));
 
             ui->lTitre->setText(QString::fromStdString(_diaporama[_posImageCourante]->getTitre() ));
             ui->lRang->setText(QString::number(_diaporama[_posImageCourante]->getRang()));
@@ -363,6 +365,51 @@ void lecteurVue::changerMode()
     CategorieImageCourant=lemode;
     std::string texte = "type catégorie : " + lemode;
     ui->bCatgorie->setText(QString::fromStdString(texte));
+}
+
+void lecteurVue::modifier_Diapositive()
+{
+    cout << "haya" << endl;
+    if (_numDiaporamaCourant > 0)
+    {
+        modifDiapo *fen_modif_diapositive= new modifDiapo();
+        fen_modif_diapositive->setRang(  QString::number(_diaporama[_posImageCourante]->getRang()));
+        fen_modif_diapositive->setTitre(  QString::fromStdString(_diaporama[_posImageCourante]->getTitre()));
+        fen_modif_diapositive->setCategorie(  QString::fromStdString(_diaporama[_posImageCourante]->getCategorie()));
+        fen_modif_diapositive->setChemin(  QString::fromStdString(_diaporama[_posImageCourante]->getChemin()));
+
+        fen_modif_diapositive->exec();
+
+        _diaporama[_posImageCourante]->setRang(fen_modif_diapositive->getRang().toUInt());
+        _diaporama[_posImageCourante]->setTitre(fen_modif_diapositive->getTitre().toStdString());
+        _diaporama[_posImageCourante]->setCategorie(fen_modif_diapositive->getCategorie().toStdString());
+        _diaporama[_posImageCourante]->setChemin(fen_modif_diapositive->getChemin().toStdString());
+
+        QString larequete = QString::fromStdString("update Diapos set titrePhoto='" + _diaporama[_posImageCourante]->getTitre() +"' where idphoto=" + _diaporama[_posImageCourante]->getId() );
+        QSqlQuery maRequete1(larequete);
+        maRequete1.next();
+
+        string fam=_diaporama[_posImageCourante]->getCategorie();
+        if (fam=="Personnage")
+        {fam="1";}
+        else if (fam=="Objet")
+        {fam="2";}
+        else
+        {fam="3";}
+        larequete = QString::fromStdString("update Diapos set idFam=" + fam +" where idphoto=" + _diaporama[_posImageCourante]->getId() );
+        QSqlQuery maRequete2(larequete);
+        maRequete2.next();
+
+        larequete = QString::fromStdString("update Diapos set uriPhoto='" + _diaporama[_posImageCourante]->getChemin() +"' where idphoto=" + _diaporama[_posImageCourante]->getId() );
+        cout << larequete.toStdString() << endl;
+        QSqlQuery maRequete3(larequete);
+        maRequete3.next();
+
+        larequete = QString::fromStdString("update DiaposDansDiaporama set rang=" + to_string(_diaporama[_posImageCourante]->getRang()) +" where idDiapo=" + _diaporama[_posImageCourante]->getId()+" and idDiaporama=" + to_string(_numDiaporamaCourant) );
+        cout << larequete.toStdString() << endl;
+        QSqlQuery maRequete4(larequete);
+        maRequete4.next();
+    }
 }
 
 
