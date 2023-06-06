@@ -29,7 +29,7 @@ public:
     QTimer timer;
     int vitesse_defilement=2;
     database *db;
-    string chemin = "F:\\ecole\\SAE\\SAE S2.01\\projet-avec-git-S2.01\\cartesDisney";
+    string chemin = "F:\\ecole\\SAE\\SAE S2.01\\SAE-S.01-\\cartesDisney";
 
     void avancer(int);             // incrémente _posImageCourante, modulo nbImages()
     void reculer(int);             // décrémente _posImageCourante, modulo nbImages()
@@ -44,16 +44,16 @@ public:
 
 
 public slots:
-    void lancerDiaporama();//permet de lancer le diaporama
+    void lancerDiaporama();
     void av();//avancer
     void rec();//reculer
     void arreterDiaporama();//arrete le diaporama
     void fermertous();//ferme tous
     void aide();//affiche la fenetre
     void chargerdiapo1();//chager le diaporama 1
-    void enleverdiapo1();//enleve le diaporama actuel
-    void defile();//recupéré la nouvelle vitesse de defilement
-    void changerMode();//pour changer le mode de l'application
+    void enleverdiapo1();
+    void defile();
+    void changerMode();
 
 
 private:
